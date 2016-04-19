@@ -8,4 +8,8 @@ class Player
     # return int (0-8)
     NotImplementedError
   end
+
+  def feedback(_, _)
+    # game win/lose/even feedback
+  end
 end
