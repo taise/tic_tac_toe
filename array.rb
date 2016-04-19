@@ -1,6 +1,6 @@
 class Array
   def to_marubatsu
-    self.map do |v|
+    map do |v|
       case v
       when 1  then '⭕ '
       when -1 then '❌ '

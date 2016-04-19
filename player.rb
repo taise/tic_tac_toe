@@ -4,7 +4,7 @@ class Player
     @symbol = symbol
   end
 
-  def turn(board, t)
+  def turn(_, _)
     # return int (0-8)
     NotImplementedError
   end
