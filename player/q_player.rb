@@ -3,9 +3,10 @@ require_relative '../player'
 
 class QPlayer < Player
   Q_YAML = './q.yml'
+
   def initialize(symbol)
     super
-    @q  = read
+    @@q ||= read
     @ε_ = 0.2  # e-greedy chance of random exploration
     @α_ = 0.3  # learning rate
     @γ_ = 0.9  # discount factor for future rewards
@@ -25,7 +26,12 @@ class QPlayer < Player
 
   def feedback(value, board)
     reward(value, board)
-    save
+  end
+
+  def save
+    open(Q_YAML, 'w') do |f|
+      f.write @@q.to_yaml
+    end
   end
 
   private
@@ -36,11 +42,11 @@ class QPlayer < Player
   end
 
   def q_value(state, action)
-    q = @q.dig(state, action)
+    q = @@q.dig(state, action)
     return q if q
 
-    @q[state] = {} if @q[state].nil?
-    @q[state][action] = 1.0 if q.nil?
+    @@q[state] = {} if @@q[state].nil?
+    @@q[state][action] = 1.0 if q.nil?
   end
 
   def actions(board = @last_board)
@@ -52,6 +58,7 @@ class QPlayer < Player
   end
 
   def reward(value, board)
+    value = -0.1 if value == 0
     learn(@last_board, @last_action, value, board) if @last_action
   end
 
@@ -59,17 +66,11 @@ class QPlayer < Player
     prev = q_value(state_s, action)
     max_q = actions(result_state).map {|action| q_value(result_state.join(','), action) }.max
     return  if max_q.nil?
-    @q[state.join(',')][action] = prev + @α_ * ((reward + @γ_ * max_q) - prev)
+    @@q[state.join(',')][action] = prev + @α_ * ((reward + @γ_ * max_q) - prev)
   end
 
   def read
     return YAML.load_file(Q_YAML) if File.exists? Q_YAML
     {}
-  end
-
-  def save
-    open(Q_YAML, 'w') do |f|
-      f.write @q.to_yaml
-    end
   end
 end

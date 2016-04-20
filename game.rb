@@ -3,25 +3,26 @@ require './player/random_player'
 require './player/q_player'
 
 class Game
+
+  attr_reader :players
   def initialize
-    @board    = Array.new(9).fill(0) # 盤面は0で初期化
-    @player1  = QPlayer.new(1)
-    @player2  = RandomPlayer.new(-1)
-    @playsers = [@player1, @player2]
-    @result   = nil
+    @board   = Array.new(9).fill(0) # 盤面は0で初期化
+    @player1 = QPlayer.new(1)
+    @player2 = RandomPlayer.new(-1)
+    @players = [@player1, @player2]
+    @result  = nil
   end
 
   def play
     t = 0
     loop do
-      player = @playsers[t % 2]
+      player = @players[t % 2]
       position = player.turn(@board, t)
       @board[position] = player.symbol
       # print_board
       end_check
       if @result
-        puts "#{t + 1}手目"
-        return @result
+        return @result, t
       end
       t += 1
     end

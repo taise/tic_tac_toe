@@ -1,13 +1,13 @@
 require './game'
 
 total = 0
-score_sheet = []
+N = 100000
 
-1000.times do |i|
-  puts "\n#{i + 1} Game\n" + '=' * 12
-  score = Game.new.play
-  p score
+N.times do |i|
+  score, t = Game.new.play
   total += score
-  score_sheet << score
-  puts "total: #{total}"
+  puts "%05d" % (i + 1) + " | total: #{total} | #{t}手目 #{score}"
 end
+
+Game.new.players.map(&:save)
+puts "勝率: #{total.to_f / N}"

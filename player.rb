@@ -12,4 +12,7 @@ class Player
   def feedback(_, _)
     # game win/lose/even feedback
   end
+
+  def save
+  end
 end
