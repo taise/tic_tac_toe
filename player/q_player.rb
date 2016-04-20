@@ -36,7 +36,6 @@ class QPlayer < Player
   end
 
   def q_value(state, action)
-    p @q
     q = @q.dig(state, action)
     return q if q
 
@@ -58,12 +57,13 @@ class QPlayer < Player
 
   def learn(state, action, reward, result_state)
     prev = q_value(state_s, action)
-    max_q = actions.map {|action| q_value(state_s, action) }.max
+    max_q = actions(result_state).map {|action| q_value(result_state.join(','), action) }.max
+    return  if max_q.nil?
     @q[state.join(',')][action] = prev + @α_ * ((reward + @γ_ * max_q) - prev)
   end
 
   def read
-    return open(Q_YAML, 'r').read if File.exists? Q_YAML
+    return YAML.load_file(Q_YAML) if File.exists? Q_YAML
     {}
   end
 
@@ -73,5 +73,3 @@ class QPlayer < Player
     end
   end
 end
-
-p QPlayer.new(1).turn(Array.new(9).fill(0), 0)

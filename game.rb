@@ -17,7 +17,7 @@ class Game
       player = @playsers[t % 2]
       position = player.turn(@board, t)
       @board[position] = player.symbol
-      print_board
+      # print_board
       t += 1
     end
   end
@@ -72,7 +72,7 @@ class Game
 end
 
 
-5.times do |i|
+50000.times do |i|
   puts "\n#{i + 1} Game\n" + '=' * 12
   Game.new.play
 end
