@@ -8,16 +8,21 @@ class Game
     @player1  = QPlayer.new(1)
     @player2  = RandomPlayer.new(-1)
     @playsers = [@player1, @player2]
+    @result   = nil
   end
 
   def play
     t = 0
-    until end_check
-      puts "\n#{t + 1}手目"
+    loop do
       player = @playsers[t % 2]
       position = player.turn(@board, t)
       @board[position] = player.symbol
       # print_board
+      end_check
+      if @result
+        puts "#{t + 1}手目"
+        return @result
+      end
       t += 1
     end
   end
@@ -47,20 +52,19 @@ class Game
       if res == 3
         @player1.feedback(1,  @board)
         @player2.feedback(-1, @board)
-        return true
+        @result = 1
       end
       if res == -3
         @player2.feedback(1,  @board)
         @player1.feedback(-1, @board)
-        return true
+        @result = -1
       end
     end
     if board_is_full?
       @player1.feedback(0.5, @board)
       @player2.feedback(0.5, @board)
-      return true
+      @result = 0
     end
-    false
   end
 
   def print_board
@@ -69,10 +73,4 @@ class Game
       puts row.to_marubatsu.join(' | ')
     end
   end
-end
-
-
-50000.times do |i|
-  puts "\n#{i + 1} Game\n" + '=' * 12
-  Game.new.play
 end
