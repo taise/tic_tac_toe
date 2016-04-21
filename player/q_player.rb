@@ -8,7 +8,7 @@ class QPlayer < Player
     super
     @@q ||= read
     @ε_ = 0.2  # e-greedy chance of random exploration
-    @α_ = 0.3  # learning rate
+    @α_ = 0.4  # learning rate
     @γ_ = 0.9  # discount factor for future rewards
     @last_board  = []
     @last_action = []
@@ -58,7 +58,6 @@ class QPlayer < Player
   end
 
   def reward(value, board)
-    value = -0.1 if value == 0
     learn(@last_board, @last_action, value, board) if @last_action
   end
 

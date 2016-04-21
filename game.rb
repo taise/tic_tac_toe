@@ -54,8 +54,7 @@ class Game
         @player1.feedback(1,  @board)
         @player2.feedback(-1, @board)
         @result = 1
-      end
-      if res == -3
+      elsif res == -3
         @player2.feedback(1,  @board)
         @player1.feedback(-1, @board)
         @result = -1
@@ -65,6 +64,9 @@ class Game
       @player1.feedback(0.5, @board)
       @player2.feedback(0.5, @board)
       @result = 0
+    else
+      @player1.feedback(0, @board)
+      @player2.feedback(0, @board)
     end
   end
 
@@ -73,5 +75,12 @@ class Game
       puts '-' * 12
       puts row.to_marubatsu.join(' | ')
     end
+    puts '#' * 12
   end
+end
+
+if __FILE__ == $0
+  game = Game.new
+  game.play
+  game.players.map(&:save)
 end
