@@ -4,12 +4,12 @@ class Player
     @symbol = symbol
   end
 
-  def turn(_, _)
+  def turn(_board, _t)
     # return int (0-8)
     NotImplementedError
   end
 
-  def feedback(_, _)
+  def feedback(_value, _board)
     # game win/lose/even feedback
   end
 

@@ -1,4 +1,4 @@
-require './array'
+require './board'
 require './player/random_player'
 require './player/q_player'
 
@@ -6,7 +6,7 @@ class Game
 
   attr_reader :players
   def initialize
-    @board   = Array.new(9).fill(0) # 盤面は0で初期化
+    @board   = Board.new # 盤面は0で初期化
     @player1 = QPlayer.new(1)
     @player2 = RandomPlayer.new(-1)
     @players = [@player1, @player2]
@@ -18,8 +18,8 @@ class Game
     loop do
       player = @players[t % 2]
       position = player.turn(@board, t)
-      @board[position] = player.symbol
-      # print_board
+      @board.put(position, player.symbol)
+      # @board.print
       end_check
       if @result
         return @result, t
@@ -41,10 +41,6 @@ class Game
     [2, 4, 6]
   ].freeze
 
-  def board_is_full?
-    @board.find_index(0).nil?
-  end
-
   def end_check
     # 縦横斜めで3つ揃っているものがないかチェックする
     # playerは盤面に(1, -1)を入れるので、3 or -3になったらゲーム終了
@@ -60,7 +56,7 @@ class Game
         @result = -1
       end
     end
-    if board_is_full?
+    if @board.is_full?
       @player1.feedback(0.5, @board)
       @player2.feedback(0.5, @board)
       @result = 0
@@ -69,18 +65,10 @@ class Game
       @player2.feedback(0, @board)
     end
   end
-
-  def print_board
-    @board.each_slice(3).each do |row|
-      puts '-' * 12
-      puts row.to_marubatsu.join(' | ')
-    end
-    puts '#' * 12
-  end
 end
 
 if __FILE__ == $0
   game = Game.new
-  game.play
+  p game.play
   game.players.map(&:save)
 end
